@@ -1,0 +1,41 @@
+{
+  "name": "litera5-api-js-client",
+  "version": "1.0.0",
+  "description": "Клиентская библиотека API Литера 5 для JavaScript",
+  "main": "src/Api.js",
+  "scripts": {
+    "test": "node $NODE_DEBUG_OPTION ./node_modules/.bin/mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/orfogrammatika/litera5-api-js-client.git"
+  },
+  "keywords": [
+    "orfogrammatika",
+    "orfogrammka",
+    "litera5",
+    "api",
+    "javascript"
+  ],
+  "author": "Konstantin V. Borisov",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orfogrammatika/litera5-api-js-client/issues"
+  },
+  "homepage": "https://github.com/orfogrammatika/litera5-api-js-client#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.1.2",
+    "require-text": "0.0.1",
+    "test-dom": "^1.0.0"
+  },
+  "dependencies": {
+    "js-logger": "^1.3.0",
+    "lodash": "^4.17.2",
+    "md5": "^2.2.1",
+    "promise-polyfill": "^6.0.2",
+    "superagent": "^3.5.2",
+    "superagent-promise": "^1.1.0"
+  }
+}
