@@ -348,11 +348,9 @@ Litera5Api.prototype.checkOgxtResults = function (params) {
 		];
 	}, function (resp) {
 		return [
-			resp.progress && [
-				resp.progress.state,
-				resp.progress.perc,
-				resp.text
-			],
+			resp.state,
+			resp.progress,
+			resp.message,
 			resp.html
 		];
 	});

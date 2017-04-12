@@ -14,7 +14,7 @@ function waitForResults(check) {
 			check: check
 		}).then(function (resp) {
 			// обрабатываем текущее состояние проверки
-			switch (resp.progress.state) {
+			switch (resp.state) {
 				case Api.CheckState.CREATED:
 				case Api.CheckState.UPLOADED:
 				case Api.CheckState.WAITING_ESTIMATION:
@@ -23,7 +23,7 @@ function waitForResults(check) {
 				case Api.CheckState.WAITING_CHECK:
 				case Api.CheckState.CHECKING:
 					// проверка ещё не завершена, ждём
-					console.log('проверка', resp.progress.perc + '%', resp.progress.text);
+					console.log('проверка', resp.progress + '%', resp.message);
 					waitForResults(check);
 					break;
 				case Api.CheckState.ESTIMATED_ERROR:
@@ -32,7 +32,7 @@ function waitForResults(check) {
 				case Api.CheckState.REJECTED:
 				case Api.CheckState.CHECKED_ERROR:
 					// проверка не удалась
-					console.error(resp.progress.text);
+					console.error(resp.message);
 					break;
 				case Api.CheckState.CHECKED_SUCCESS:
 					// проверка благополучно завершена
