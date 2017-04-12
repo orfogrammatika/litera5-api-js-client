@@ -4,7 +4,8 @@
   "description": "Клиентская библиотека API Литера 5 для JavaScript",
   "main": "src/Api.js",
   "scripts": {
-    "test": "node $NODE_DEBUG_OPTION ./node_modules/.bin/mocha --reporter spec"
+    "test": "node $NODE_DEBUG_OPTION ./node_modules/.bin/mocha --reporter spec",
+		"test-server": "node $NODE_DEBUG_OPTION ./test-server/local.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,8 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "mocha": "^3.1.2",
+    "ogxt-utils": "github:orfogrammatika/ogxt-utils",
+    "promise-defer": "^1.0.0",
     "require-text": "0.0.1",
     "test-dom": "^1.0.0"
   },

@@ -3,7 +3,7 @@
 
 # Подключение к проекту
 ```bash
-npm install --save hitsoft/litera5-api-js-client
+npm install --save orfogrammatika/litera5-api-js-client
 ```
 
 # Использование

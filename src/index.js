@@ -7,9 +7,10 @@ var Signature = require('./Signature');
 
 var log = Logger.get('Litera5 API');
 
-function Litera5ApiError(message) {
+function Litera5ApiError(message, error) {
 	this.name = 'Litera5ApiError';
 	this.message = message || '';
+	this.cause = error;
 }
 Litera5ApiError.prototype = Error.prototype;
 
@@ -18,6 +19,7 @@ function _now() {
 }
 
 function _cli(cli, method, params, requestFields, responseFields) {
+	log.debug('_cli method:', method, 'params:', params);
 	var now = _now();
 	var query = _.concat([now, cli.company], requestFields(params));
 	params = _.assign({}, params, {
@@ -37,15 +39,16 @@ function _cli(cli, method, params, requestFields, responseFields) {
 			if (cli.sig.test(resp.signature, query)) {
 				return Promise.resolve(resp);
 			} else {
-				return Promise.reject(new Litera5ApiError('Подпись не соответствует запросу'), resp);
+				throw new Litera5ApiError('Подпись не соответствует запросу', resp);
 			}
 		})
 		.catch(function (error) {
-			return Promise.reject(new Litera5ApiError('Непредвиденная ошибка API', error));
+			throw new Litera5ApiError('Непредвиденная ошибка API', error);
 		});
 }
 
 function _cliUrl(cli, method, params) {
+	log.debug('_cliUrl method:', method, 'params:', params);
 	return cli.url + method + '/' + params.oneOffId + '/';
 }
 
@@ -250,10 +253,21 @@ Litera5Api.prototype.check = function (params) {
 		];
 	});
 };
+Litera5Api.CheckProfile = {
+	/**
+	 * Проверка правописания
+	 */
+	ORTHO: 'ortho',
+	/**
+	 * Проверка красоты текста
+	 */
+	CICERO: 'cicero'
+};
 /**
  * Инициирует процедуру проверки документа в формате ogxt без участия пользователя.
  * @param {{
 	 *    login: string,
+	 *    profile: Litera5Api.CheckProfile,
 	 *    document: string,
 	 *    name: string,
 	 *    html: string,
@@ -265,6 +279,7 @@ Litera5Api.prototype.checkOgxt = function (params) {
 	return _cli(this.cli, 'check-ogxt', params, function (req) {
 		return [
 			req.login,
+			req.profile,
 			req.document,
 			req.name,
 			req.html,
