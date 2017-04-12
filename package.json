@@ -1,6 +1,6 @@
 {
   "name": "litera5-api-js-client",
-  "version": "1.0.0",
+  "version": "1.0.20170412",
   "description": "Клиентская библиотека API Литера 5 для JavaScript",
   "main": "src/Api.js",
   "scripts": {

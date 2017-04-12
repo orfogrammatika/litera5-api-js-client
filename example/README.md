@@ -2,6 +2,6 @@
 
 ### Подключение к проекту
 ```bash
-npm install --save orfogrammatika/ogxt-utils
-npm install --save orfogrammatika/litera5-api-js-client
+npm install --save github:orfogrammatika/ogxt-utils
+npm install --save github:orfogrammatika/litera5-api-js-client
 ```
