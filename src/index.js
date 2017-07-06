@@ -161,7 +161,8 @@ Litera5Api.CiceroKind = {
    *   allowResizeImages: boolean,
    *   showCancelButton: boolean,
    *   editorCss: string,
-   *   getStats: boolean
+   *   getStats: boolean,
+   *   hideEditorToolbar: boolean,
    * }} params — параметры запроса
  * @returns Promise
  */
@@ -178,7 +179,8 @@ Litera5Api.prototype.setup = function (params) {
 			req.allowResizeImages,
 			req.showCancelButton,
 			req.editorCss,
-			req.getStats
+			req.getStats,
+			req.hideEditorToolbar
 		];
 	}, function (resp) {
 		return [];
