@@ -72,9 +72,13 @@ Litera5Api.UserPermission = {
 	 */
 	USE_DICTIONARY: 'USE_DICTIONARY',
 	/**
-	 * Пользователю запрещено работать с "Синомимами/Эпитетами"
+	 * Пользователю запрещено работать с вкладкой "Красота"
 	 */
 	DISABLE_CICERO: 'DISABLE_CICERO',
+	/**
+	 * Пользователю запрещено работать с вкладкой "Качество"
+	 */
+	DISABLE_QUALITY: 'DISABLE_QUALITY',
 	/**
 	 * Пользователю запрещено при работе через апи делать повторные проверки
 	 */
@@ -119,7 +123,7 @@ Litera5Api.OrthoKind = {
 };
 
 /**
- * Типы ошибок на закладке "Синонимы/эпитеты"
+ * Типы ошибок на закладке "Красота"
  */
 Litera5Api.CiceroKind = {
 	/**
@@ -146,6 +150,12 @@ Litera5Api.CiceroKind = {
 	 * Родная речь
 	 */
 	NATIVE_SPEECH: 'mkNativeSpeech'
+};
+Litera5Api.QualityKind = {
+	/**
+	 * Водность
+	 */
+	WATER: 'mkWater'
 };
 /**
  * Настройки API Партнёра
@@ -198,7 +208,8 @@ Litera5Api.prototype.setup = function (params) {
    * 	 password: string,
    * 	 permissions: Array.<Litera5Api.UserPermission>,
    * 	 orthoKinds: Array.<Litera5Api.OrthoKind>,
-   * 	 ciceroKinds: Array.<Litera5Api.CiceroKind>
+   * 	 ciceroKinds: Array.<Litera5Api.CiceroKind>,
+   * 	 qualityKinds: Array.<Litera5Api.QualityKind>
    * }} params
  * @returns Promise
  */
@@ -210,7 +221,8 @@ Litera5Api.prototype.user = function (params) {
 			req.password,
 			req.permissions,
 			req.orthoKinds,
-			req.ciceroKinds
+			req.ciceroKinds,
+			req.qualityKinds
 		];
 	}, function (resp) {
 		return [
@@ -263,7 +275,11 @@ Litera5Api.CheckProfile = {
 	/**
 	 * Проверка красоты текста
 	 */
-	CICERO: 'cicero'
+	CICERO: 'cicero',
+	/**
+	 * Проверка качества текста
+	 */
+	QUALITY: 'quality'
 };
 /**
  * Инициирует процедуру проверки документа в формате ogxt без участия пользователя.
