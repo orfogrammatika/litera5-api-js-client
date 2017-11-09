@@ -73,14 +73,17 @@ Litera5Api.UserPermission = {
 	USE_DICTIONARY: 'USE_DICTIONARY',
 	/**
 	 * Пользователю запрещено работать с вкладкой "Красота"
+	 * @deprecated вместо этого флага нужно пользоваться параметром `checksCicero`
 	 */
 	DISABLE_CICERO: 'DISABLE_CICERO',
 	/**
 	 * Пользователю запрещено работать с вкладкой "Качество"
+	 * @deprecated вместо этого флага нужно пользоваться параметром `checksQuality`
 	 */
 	DISABLE_QUALITY: 'DISABLE_QUALITY',
 	/**
 	 * Пользователю запрещено при работе через апи делать повторные проверки
+	 * @deprecated вместо этого флага нужно пользоваться параметром `checksOrtho`
 	 */
 	DISABLE_API_SECONDARY_ORFO_CHECKS: 'DISABLE_API_SECONDARY_ORFO_CHECKS'
 };
@@ -209,7 +212,11 @@ Litera5Api.prototype.setup = function (params) {
    * 	 permissions: Array.<Litera5Api.UserPermission>,
    * 	 orthoKinds: Array.<Litera5Api.OrthoKind>,
    * 	 ciceroKinds: Array.<Litera5Api.CiceroKind>,
-   * 	 qualityKinds: Array.<Litera5Api.QualityKind>
+   * 	 qualityKinds: Array.<Litera5Api.QualityKind>,
+   * 	 checksOrtho: number,
+   * 	 checksCicero: number,
+   * 	 checksQuality: number,
+   * 	 checksTotal: number
    * }} params
  * @returns Promise
  */
@@ -222,7 +229,11 @@ Litera5Api.prototype.user = function (params) {
 			req.permissions,
 			req.orthoKinds,
 			req.ciceroKinds,
-			req.qualityKinds
+			req.qualityKinds,
+			req.checksOrtho,
+			req.checksCicero,
+			req.checksQuality,
+			req.checksTotal
 		];
 	}, function (resp) {
 		return [
