@@ -1,9 +1,10 @@
 # litera5-api-js-client
-Клиентская библиотека API Литера 5 для JavaScript
+Клиентская библиотека API Литера 5 для JavaScript (TypeScript)
 
 # Подключение к проекту
 ```bash
-npm install --save github:orfogrammatika/litera5-api-js-client
+npm install --save orfogrammatika/litera5-api-js-client
+yarn add orfogrammatika/litera5-api-js-client
 ```
 
 # Использование
