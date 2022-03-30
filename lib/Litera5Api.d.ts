@@ -1,8 +1,8 @@
 import { CheckOgxtRequest, CheckOgxtResponse, CheckOgxtResultsRequest, CheckOgxtResultsResponse, CheckRequest, CheckResponse, SetupRequest, SetupResponse, UserRequest, UserResponse } from './api-model';
 import { ILogLevel } from 'js-logger';
 export declare class Litera5Api {
-    private baseUrl;
-    private cfg;
+    private readonly baseUrl;
+    private readonly cfg;
     constructor(company: string, secret: string, url?: string);
     private _cli;
     /**
