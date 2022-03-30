@@ -179,7 +179,7 @@ export class Litera5Api {
 			(resp: CheckResponse) => [resp.document, resp.url]
 		).then(resp => ({
 			document: resp.document,
-			url: `${this.baseUrl}${resp.url}`.replace('//', '/'),
+			url: `${this.baseUrl}${resp.url}`.replace('//api', '/api'),
 		}));
 	}
 
