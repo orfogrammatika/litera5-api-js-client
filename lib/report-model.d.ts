@@ -288,5 +288,9 @@ export interface CheckStats {
          * длинные слова (список)
          */
         mostLongWords: WordCount[];
+        /**
+         * часто встречающиеся имена собственные (список)
+         */
+        mostFrequentProperName: WordCount[];
     };
 }
