@@ -297,5 +297,6 @@ export interface CheckStats {
 		/**
 		 * часто встречающиеся имена собственные (список)
 		 */
+		mostFrequentProperName: WordCount[];
 	};
 }
