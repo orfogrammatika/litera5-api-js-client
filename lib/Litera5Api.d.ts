@@ -1,4 +1,4 @@
-import { CheckOgxtRequest, CheckOgxtResponse, CheckOgxtResultsRequest, CheckOgxtResultsResponse, CheckRequest, CheckResponse, SetupRequest, SetupResponse, UserRequest, UserResponse } from './api-model';
+import { CheckOgxtRequest, CheckOgxtResponse, CheckOgxtResultsRequest, CheckOgxtResultsResponse, CheckRequest, CheckResponse, SetupRequest, SetupResponse, UserRequest, UserResponse, UserApiPasswordRequest, UserApiPasswordResponse } from './api-model';
 import { ILogLevel } from 'js-logger';
 export declare class Litera5Api {
     private readonly baseUrl;
@@ -20,6 +20,12 @@ export declare class Litera5Api {
      * @param params
      */
     user(params: UserRequest): Promise<UserResponse>;
+    /**
+     * Функция для управления специальным паролем пользователя для работы с API.
+     *
+     * @param params
+     */
+    userApiPassword(params: UserApiPasswordRequest): Promise<UserApiPasswordResponse>;
     /**
      * Инициирует процедуру проверки документа.
      *

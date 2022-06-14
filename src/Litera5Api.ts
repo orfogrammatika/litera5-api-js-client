@@ -10,6 +10,8 @@ import {
 	SetupResponse,
 	UserRequest,
 	UserResponse,
+	UserApiPasswordRequest,
+	UserApiPasswordResponse,
 } from './api-model';
 import { Litera5ApiError } from './errors';
 import { Signature } from './Signature';
@@ -153,6 +155,22 @@ export class Litera5Api {
 				req.checksTotal,
 			],
 			(resp: UserResponse) => [resp.password]
+		);
+	}
+
+	/**
+	 * Функция для управления специальным паролем пользователя для работы с API.
+	 *
+	 * @param params
+	 */
+	userApiPassword(
+		params: UserApiPasswordRequest
+	): Promise<UserApiPasswordResponse> {
+		return this._cli(
+			'user-api-password',
+			params,
+			(req: UserApiPasswordRequest) => [req.login, req.generate],
+			(resp: UserApiPasswordResponse) => [resp.password]
 		);
 	}
 

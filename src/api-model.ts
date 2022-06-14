@@ -214,6 +214,27 @@ export interface UserResponse extends Dict {
 	password?: string;
 }
 
+export interface UserApiPasswordRequest extends Dict {
+	/**
+	 * Идентификатор пользователя на Сайте. Логин пользователя на Сайте формируется из полей `login` и `company` по
+	 * формуле "login@company". Идентификатор пользователя не может быть пустым и должен состоять из строчных
+	 * (маленьких) букв английского алфавита, цифр или знака точки.
+	 */
+	login: string;
+	/**
+	 * Если `true`, то создать новый пароль заместив собой существующий.
+	 */
+	generate?: boolean;
+}
+
+export interface UserApiPasswordResponse extends Dict {
+	/**
+	 * Свежесгенерированный пароль пользователя для работы с API (если в запросе указан параметр `generate`) или
+	 * текущий параметр.
+	 */
+	password?: string;
+}
+
 export interface NameValue {
 	/**
 	 * Название произвольного поля

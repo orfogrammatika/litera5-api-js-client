@@ -10,6 +10,8 @@ export type {
 	CheckOgxtResultsResponse,
 	UserRequest,
 	UserResponse,
+	UserApiPasswordRequest,
+	UserApiPasswordResponse,
 } from './api-model';
 export type { Litera5ApiError } from './errors';
 export {
