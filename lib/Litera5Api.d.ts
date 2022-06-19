@@ -1,9 +1,16 @@
 import { CheckOgxtRequest, CheckOgxtResponse, CheckOgxtResultsRequest, CheckOgxtResultsResponse, CheckRequest, CheckResponse, SetupRequest, SetupResponse, UserRequest, UserResponse, UserApiPasswordRequest, UserApiPasswordResponse } from './api-model';
 import { ILogLevel } from 'js-logger';
+export interface Litera5ApiConfig {
+    company: string;
+    secret: string;
+    userApiPassword?: string;
+    url?: string;
+    level?: ILogLevel;
+}
 export declare class Litera5Api {
     private readonly baseUrl;
     private readonly cfg;
-    constructor(company: string, secret: string, url?: string);
+    constructor(params: Litera5ApiConfig);
     private _cli;
     /**
      * Настройки API Партнёра
@@ -33,6 +40,12 @@ export declare class Litera5Api {
      */
     check(params: CheckRequest): Promise<CheckResponse>;
     /**
+     * Инициирует процедуру проверки документа от лица пользователя.
+     *
+     * @param params
+     */
+    userCheck(params: CheckRequest): Promise<CheckResponse>;
+    /**
      * Инициирует процедуру проверки документа в формате ogxt без участия пользователя.
      *
      * @param params
@@ -45,4 +58,4 @@ export declare class Litera5Api {
      */
     checkOgxtResults(params: CheckOgxtResultsRequest): Promise<CheckOgxtResultsResponse>;
 }
-export declare function createApi(company: string, secret: string, url?: string, level?: ILogLevel): Litera5Api;
+export declare function createApi(config: Litera5ApiConfig, level?: ILogLevel): Litera5Api;

@@ -38,29 +38,51 @@ interface Config {
 	url: string;
 	company: string;
 	sig: Signature;
+	userSig: Signature;
 }
 
 type Litera5ApiFields<T extends Dict> = (params: T) => any[];
+
+function randomPassword(length: number): string {
+	let result           = '';
+	const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const charactersLength = characters.length;
+	for ( let i = 0; i < length; i++ ) {
+		result += characters.charAt(Math.floor(Math.random() *
+			charactersLength));
+	}
+	return result;
+}
+
+export interface Litera5ApiConfig {
+	company: string;
+	secret: string;
+	userApiPassword?: string;
+	url?: string;
+	level?: ILogLevel;
+}
 
 export class Litera5Api {
 	private readonly baseUrl: string;
 	private readonly cfg: Config;
 
-	constructor(company: string, secret: string, url?: string) {
-		this.baseUrl = url ?? 'https://litera5.ru/';
+	constructor(params: Litera5ApiConfig) {
+		this.baseUrl = params.url ?? 'https://litera5.ru/';
 		if (!this.baseUrl.endsWith('/')) {
 			this.baseUrl = this.baseUrl + '/';
 		}
 		this.cfg = {
 			url: this.baseUrl + 'api/pub/',
-			company: company,
-			sig: new Signature(secret),
+			company: params.company,
+			sig: new Signature(params.secret),
+			userSig: new Signature(params.userApiPassword ?? randomPassword(40))
 		};
 
 		log.debug('API настроено и готово к работе.');
 	}
 
 	private _cli<T, U>(
+		sig: Signature,
 		method: string,
 		params: T,
 		requestFields: Litera5ApiFields<T>,
@@ -72,7 +94,7 @@ export class Litera5Api {
 		params = _.assign({}, params, {
 			time: now,
 			company: this.cfg.company,
-			signature: this.cfg.sig.sign(query),
+			signature: sig.sign(query),
 		});
 		return fetch(`${this.cfg.url}${method}/`, {
 			method: 'POST',
@@ -89,7 +111,7 @@ export class Litera5Api {
 			.then((resp: Dict) => {
 				log.debug('responce:', resp);
 				const query = _.concat([resp.time, responseFields(resp as U)]);
-				if (this.cfg.sig.test(resp.signature, query)) {
+				if (sig.test(resp.signature, query)) {
 					return resp;
 				} else {
 					throw new Litera5ApiError('Подпись не соответствует запросу');
@@ -109,6 +131,7 @@ export class Litera5Api {
 	 */
 	setup(params: SetupRequest): Promise<SetupResponse> {
 		return this._cli(
+			this.cfg.sig,
 			'setup',
 			params,
 			(req: SetupRequest) => [
@@ -139,6 +162,7 @@ export class Litera5Api {
 	 */
 	user(params: UserRequest): Promise<UserResponse> {
 		return this._cli(
+			this.cfg.sig,
 			'user',
 			params,
 			(req: UserRequest) => [
@@ -167,6 +191,7 @@ export class Litera5Api {
 		params: UserApiPasswordRequest
 	): Promise<UserApiPasswordResponse> {
 		return this._cli(
+			this.cfg.sig,
 			'user-api-password',
 			params,
 			(req: UserApiPasswordRequest) => [req.login, req.generate],
@@ -181,7 +206,36 @@ export class Litera5Api {
 	 */
 	check(params: CheckRequest): Promise<CheckResponse> {
 		return this._cli(
+			this.cfg.sig,
 			'check',
+			params,
+			(req: CheckRequest) => [
+				req.login,
+				req.token,
+				req.document,
+				req.name,
+				req.title,
+				req.description,
+				req.keywords,
+				req.custom?.map(nv => `${nv.name ?? ''}${nv.value ?? ''}`).join(''),
+				req.html,
+			],
+			(resp: CheckResponse) => [resp.document, resp.url]
+		).then(resp => ({
+			document: resp.document,
+			url: `${this.baseUrl}${resp.url}`.replace('//api', '/api'),
+		}));
+	}
+
+	/**
+	 * Инициирует процедуру проверки документа от лица пользователя.
+	 *
+	 * @param params
+	 */
+	userCheck(params: CheckRequest): Promise<CheckResponse> {
+		return this._cli(
+			this.cfg.userSig,
+			'user-check',
 			params,
 			(req: CheckRequest) => [
 				req.login,
@@ -208,6 +262,7 @@ export class Litera5Api {
 	 */
 	checkOgxt(params: CheckOgxtRequest): Promise<CheckOgxtResponse> {
 		return this._cli(
+			this.cfg.sig,
 			'check-ogxt',
 			params,
 			(req: CheckOgxtRequest) => [
@@ -231,6 +286,7 @@ export class Litera5Api {
 		params: CheckOgxtResultsRequest
 	): Promise<CheckOgxtResultsResponse> {
 		return this._cli(
+			this.cfg.sig,
 			'check-ogxt-results',
 			params,
 			(req: CheckOgxtResultsRequest) => [req.check],
@@ -244,14 +300,9 @@ export class Litera5Api {
 	}
 }
 
-export function createApi(
-	company: string,
-	secret: string,
-	url?: string,
-	level?: ILogLevel
-): Litera5Api {
+export function createApi(config: Litera5ApiConfig, level?: ILogLevel): Litera5Api {
 	if (level) {
 		Logger.setLevel(level);
 	}
-	return new Litera5Api(company, secret, url);
+	return new Litera5Api(config);
 }
