@@ -17,7 +17,7 @@ import { Litera5ApiError } from './errors';
 import { Signature } from './Signature';
 import Logger, { ILogLevel } from 'js-logger';
 import _ from 'lodash';
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 
 Logger.useDefaults({
 	formatter: (messages, context) => {
@@ -44,10 +44,10 @@ interface Config {
 type Litera5ApiFields<T extends Dict> = (params: T) => any[];
 
 function randomPassword(length: number): string {
-	let result           = '';
-	const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let result = '';
+	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	const charactersLength = characters.length;
-	for ( let i = 0; i < length; i++ ) {
+	for (let i = 0; i < length; i++) {
 		result += characters.charAt(Math.floor(Math.random() *
 			charactersLength));
 	}
@@ -56,7 +56,7 @@ function randomPassword(length: number): string {
 
 export interface Litera5ApiConfig {
 	company: string;
-	secret: string;
+	secret?: string;
 	userApiPassword?: string;
 	url?: string;
 	level?: ILogLevel;
@@ -74,8 +74,8 @@ export class Litera5Api {
 		this.cfg = {
 			url: this.baseUrl + 'api/pub/',
 			company: params.company,
-			sig: new Signature(params.secret),
-			userSig: new Signature(params.userApiPassword ?? randomPassword(40))
+			sig: new Signature(params.secret ?? randomPassword(40)),
+			userSig: new Signature(params.userApiPassword ?? randomPassword(40)),
 		};
 
 		log.debug('API настроено и готово к работе.');
@@ -86,7 +86,7 @@ export class Litera5Api {
 		method: string,
 		params: T,
 		requestFields: Litera5ApiFields<T>,
-		responseFields: Litera5ApiFields<U>
+		responseFields: Litera5ApiFields<U>,
 	): Promise<U> {
 		log.debug('_cli method:', method, 'params:', params);
 		const now = new Date().getTime();
@@ -104,9 +104,13 @@ export class Litera5Api {
 			},
 			body: JSON.stringify(params),
 		})
-			.then((resp: any) => {
+			.then((resp: Response) => {
 				log.debug('raw responce:', resp);
-				return resp.json() as Dict;
+				if (resp.ok) {
+					return resp.json() as Dict;
+				} else {
+					throw resp;
+				}
 			})
 			.then((resp: Dict) => {
 				log.debug('responce:', resp);
@@ -148,7 +152,7 @@ export class Litera5Api {
 				req.getStats,
 				req.hideEditorToolbar,
 			],
-			() => []
+			() => [],
 		);
 	}
 
@@ -178,7 +182,7 @@ export class Litera5Api {
 				req.checksQuality,
 				req.checksTotal,
 			],
-			(resp: UserResponse) => [resp.password]
+			(resp: UserResponse) => [resp.password],
 		);
 	}
 
@@ -188,14 +192,14 @@ export class Litera5Api {
 	 * @param params
 	 */
 	userApiPassword(
-		params: UserApiPasswordRequest
+		params: UserApiPasswordRequest,
 	): Promise<UserApiPasswordResponse> {
 		return this._cli(
 			this.cfg.sig,
 			'user-api-password',
 			params,
 			(req: UserApiPasswordRequest) => [req.login, req.generate],
-			(resp: UserApiPasswordResponse) => [resp.password]
+			(resp: UserApiPasswordResponse) => [resp.password],
 		);
 	}
 
@@ -220,7 +224,7 @@ export class Litera5Api {
 				req.custom?.map(nv => `${nv.name ?? ''}${nv.value ?? ''}`).join(''),
 				req.html,
 			],
-			(resp: CheckResponse) => [resp.document, resp.url]
+			(resp: CheckResponse) => [resp.document, resp.url],
 		).then(resp => ({
 			document: resp.document,
 			url: `${this.baseUrl}${resp.url}`.replace('//api', '/api'),
@@ -248,7 +252,7 @@ export class Litera5Api {
 				req.custom?.map(nv => `${nv.name ?? ''}${nv.value ?? ''}`).join(''),
 				req.html,
 			],
-			(resp: CheckResponse) => [resp.document, resp.url]
+			(resp: CheckResponse) => [resp.document, resp.url],
 		).then(resp => ({
 			document: resp.document,
 			url: `${this.baseUrl}${resp.url}`.replace('//api', '/api'),
@@ -273,7 +277,7 @@ export class Litera5Api {
 				req.html,
 				req.ogxt,
 			],
-			(resp: CheckOgxtResponse) => [resp.document, resp.check]
+			(resp: CheckOgxtResponse) => [resp.document, resp.check],
 		);
 	}
 
@@ -283,7 +287,7 @@ export class Litera5Api {
 	 * @param params
 	 */
 	checkOgxtResults(
-		params: CheckOgxtResultsRequest
+		params: CheckOgxtResultsRequest,
 	): Promise<CheckOgxtResultsResponse> {
 		return this._cli(
 			this.cfg.sig,
@@ -295,7 +299,7 @@ export class Litera5Api {
 				resp.progress,
 				resp.message,
 				resp.html ?? '',
-			]
+			],
 		);
 	}
 }

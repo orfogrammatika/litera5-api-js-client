@@ -2,7 +2,7 @@ import { CheckOgxtRequest, CheckOgxtResponse, CheckOgxtResultsRequest, CheckOgxt
 import { ILogLevel } from 'js-logger';
 export interface Litera5ApiConfig {
     company: string;
-    secret: string;
+    secret?: string;
     userApiPassword?: string;
     url?: string;
     level?: ILogLevel;
