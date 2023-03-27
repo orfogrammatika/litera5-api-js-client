@@ -5,7 +5,6 @@ export interface Litera5ApiConfig {
     secret?: string;
     userApiPassword?: string;
     url?: string;
-    level?: ILogLevel;
 }
 export declare class Litera5Api {
     private readonly baseUrl;
