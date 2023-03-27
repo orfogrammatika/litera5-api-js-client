@@ -23,7 +23,7 @@ api
   });
 ```
 
-Пример подключения вынесен в [самостоятельный проек](https://github.com/orfogrammatika/litera5-api-js-client-example).
+Пример подключения вынесен в [самостоятельный проект](https://github.com/orfogrammatika/litera5-api-js-client-example).
 
 Работу библиотеки в полном объёме и во всех подробностях можно рассмотреть в [консольном клиенте для API Литеры](https://github.com/orfogrammatika/litera5-api-cli).
 
